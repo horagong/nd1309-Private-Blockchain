@@ -6,15 +6,16 @@ const BlockChain = require('./BlockChain.js');
 const Block = require('./Block.js');
 
 let myBlockChain = new BlockChain.Blockchain();
-
+/*
+*/
 setTimeout(function () {
 	console.log("Waiting...")
 }, 10000);
-
 /******************************************
  ** Function for Create Tests Blocks   ****
  ******************************************/
-
+/*
+*/
 (function theLoop (i) {
 	setTimeout(function () {
 		let blockTest = new Block.Block("Test Block - " + (i + 1));
@@ -26,7 +27,6 @@ setTimeout(function () {
 		});
 	}, 10000);
   })(0);
-
 
 /*
 // Be careful this only will work if `getBlockHeight` method in Blockchain.js file return a Promise
@@ -81,9 +81,10 @@ myBlockChain.getBlock(6).then((block) => {
 		}
 	}).catch((err) => { console.log(err);});
 }).catch((err) => { console.log(err);});
+*/
 
 
-
+/*
 // Be careful this only will work if `validateChain` method in Blockchain.js file return a Promise
 myBlockChain.validateChain()
 .then((errorLog) => {
