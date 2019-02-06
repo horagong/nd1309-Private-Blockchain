@@ -1,3 +1,26 @@
+# Project #3. Connect Private Blockchain to Front-End Client via APIs
+
+In this project I created the classes to manage my private blockchain using `LevelDB` and serve API for clients using `Expressjs`.
+
+## Setup project for Review.
+
+To setup the project for review do the following:
+1. Download the project.
+2. Run command __npm install__ to install the project dependencies.
+3. Run command __node simpleChain.js__ in the root directory as in Project #2.
+This will make test blocks.
+4. Run command __node app.js__.
+
+## Testing the project
+1. try GET requesting to http://localhost:8000/block/:blockHeight
+2. try POST requesting to http://localhost:8000/block with data like
+```js
+{
+      "body": "Testing block with test string data"
+}
+```
+
+
 # Project #2. Private Blockchain
 
 This is Project 2, Private Blockchain, in this project I created the classes to manage my private blockchain, to be able to persist my blochchain I used LevelDB.
