@@ -86,13 +86,14 @@ class Blockchain {
     // Validate Blockchain
     async validateChain() {
         // Add your code here
-        let errorLog = [];
-        let self = this;
-        let count = await this.bd.getBlocksCount();
-        for (var i = 0; i < count; i++) {
+        const errorLog = [];
+        const self = this;
+        const count = await this.bd.getBlocksCount();
+        /*
+        for (let i = 0; i < count; i++) {
           errorLog.push(new Promise(async function(resolve, reject) {
             const j = i;
-            var valid = await self.validateBlock(i);
+            const valid = await self.validateBlock(i);
             if (valid === false) {
               //console.log('validate false', j);
               resolve('#' + j + ': ' + false);
@@ -101,15 +102,16 @@ class Blockchain {
             }
           }));
         }
+        */
 
-        for (var i = 0; i < count - 1; i++) {
+        for (let i = 0; i < count - 1; i++) {
           // compare blocks hash link
           errorLog.push(new Promise(async function(resolve, reject) {
-            var j = i;
-            let block = await self.getBlock(j);
-            let blockHash = block.hash;
-            let nextBlock = await self.getBlock(j+1);
-            let previousHash = nextBlock.previousBlockHash;
+            const j = i;
+            const block = await self.getBlock(j);
+            const blockHash = block.hash;
+            const nextBlock = await self.getBlock(j+1);
+            const previousHash = nextBlock.previousBlockHash;
             if (blockHash !== previousHash) {
               //console.log('validate false', j, 'vs', j+1);
               resolve('#' + j + ' link: ' + false);
