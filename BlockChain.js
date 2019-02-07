@@ -48,12 +48,11 @@ class Blockchain {
         newBlock.time = new Date().getTime().toString().slice(0, -3);
         newBlock.hash = SHA256(JSON.stringify(newBlock)).toString();
         //console.log('addBlock: ' + JSON.stringify(newBlock))
-        return this.bd.addLevelDBData(newBlock.height, JSON.stringify(newBlock));
+        block = await this.bd.addLevelDBData(newBlock.height, JSON.stringify(newBlock));
+        return JSON.parse(block);
     }
 
-    // Get Block By Height
     async getBlock(height) {
-        // Add your code here
         let block = await this.bd.getLevelDBData(height);
         if (block) {
           //console.log('getBlock: ' + block);
@@ -62,6 +61,17 @@ class Blockchain {
           return undefined;
         }
     }
+
+    async getBlockByHash(hash) {
+      let block = await this.bd.getBlockByHash(hash);
+      return block;
+    }
+
+    async getBlockByWalletAddress(address) {
+      let blocks = await this.bd.getBlockByWalletAddress(address);
+      return blocks;
+    }
+
 
     // Validate if Block is being tampered by Block Height
     async validateBlock(height) {

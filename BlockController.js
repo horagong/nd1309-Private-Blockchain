@@ -1,6 +1,12 @@
 const SHA256 = require('crypto-js/sha256');
 const Block = require('./Block.js');
 const BlockChain = require('./BlockChain.js');
+const MemPool = require('./MemPool.js');
+const hex2ascii = require('hex2ascii');
+
+//const bitcoin = require('bitcoinjs-lib');
+const bitcoinMessage = require('bitcoinjs-message');
+
 
 /**
  * Controller Definition to encapsulate routes to work with blocks
@@ -16,41 +22,155 @@ class BlockController {
 
         //this.blocks = [];
         //this.initializeMockData();
-        this.bd = new BlockChain.Blockchain();
+        this.bc = new BlockChain.Blockchain();
+        this.mempool = new MemPool.MemPool();
 
-        this.getBlockByIndex();
+        this.getBlockByHeight();
+        this.getBlockByHash();
+        this.getBlockByWalletAddress();
         this.postNewBlock();
+        this.requestValidation();
+        this.validate();
     }
 
     /**
-     * Implement a GET Endpoint to retrieve a block by index, url: "/api/block/:index"
+     * Implement a GET Endpoint to retrieve a block by index, url: "/block/:index"
      */
-    getBlockByIndex() {
-        this.app.get("/block/:height", async (req, res) => {
-            // Add your code here
-            let height = req.params.height;
-            let block = await this.bd.getBlock(height)
-            if (block) {
-              res.send(block);
-            } else {
-              res.status(400).json({message: "no such block"});
-            }
-        });
+    getBlockByHeight() {
+      this.app.get("/block/:height", async (req, res) => {
+        let height = req.params.height;
+        let block = await this.bc.getBlock(height)
+        if (block) {
+        /* for project 4
+          try {
+            block.body.star.storyDecoded = hex2ascii(block.body.star.story);
+          } catch {
+          }
+          */
+          res.send(JSON.stringify(block, null, 2));
+        } else {
+          res.status(400).json({message: "no such block"});
+        }
+      });
     }
 
     /**
-     * Implement a POST Endpoint to add a new Block, url: "/api/block"
+     * Implement a GET Endpoint to retrieve a block by hash, url: "/stars/hash:hash"
+     */
+    getBlockByHash() {
+      this.app.get("/stars/hash([\:]):hash", async (req, res) => {
+        let hash = req.params.hash;
+        let block = await this.bc.getBlockByHash(hash)
+        if (block) {
+          try {
+            block.body.star.storyDecoded = hex2ascii(block.body.star.story);
+          } catch {
+          }
+          res.send(JSON.stringify(block, null, 2));
+        } else {
+          res.status(400).json({message: "no such block"});
+        }
+      });
+    }
+
+    
+    getBlockByWalletAddress() {
+      this.app.get("/stars/address([\:]):address", async (req, res) => {
+        let address = req.params.address;
+        let blocks = await this.bc.getBlockByWalletAddress(address)
+        if (blocks) {
+          blocks.forEach((item) => {
+            try {
+              item.body.star.storyDecoded = hex2ascii(item.body.star.story);
+            } catch {
+            }
+          });
+          res.send(JSON.stringify(blocks, null, 2));
+        } else {
+          res.status(400).json({message: "no such block"});
+        }
+      });
+    }
+    
+
+    /**
+     * Implement a POST Endpoint to add a new Block, url: "/block"
      */
     postNewBlock() {
-        this.app.post("/block", async (req, res) => {
-            // Add your code here
-            if (req.body) {
-              let result = await this.bd.addBlock(req.body);
-              res.send(result);
-            } else {
-              res.status(400).json({message: "no block content"});
-            }
-        });
+      this.app.post("/block", async (req, res) => {
+        if (req.body.body) {
+          let result = await this.bc.addBlock(req.body);
+          res.send(result);
+        } else {
+          res.status(400).json({message: "no block content"});
+        }
+
+      });
+      /* for project 4
+      this.app.post("/block", async (req, res) => {
+        if (req.body.address) {
+          const valid = await this.mempool.verifyAddressRequest(req.body.address);
+          if (valid) {
+            let body = {
+              address: req.body.address,
+              star: {
+                      ra: req.body.star.ra,
+                      dec: req.body.star.dec,
+                      mag: req.body.star.mag,
+                      cen: req.body.star.cen,
+                      story: Buffer.from(req.body.star.story).toString('hex')
+              }
+            };
+            let block = new Block.Block(body);
+            block = await this.bc.addBlock(block);
+            block.body.star.storyDecoded = hex2ascii(block.body.star.story);
+            res.send(JSON.stringify(block.body, null, 2));
+          } else {
+            res.status(400).json({message: "not accessible"});
+          }
+        } else {
+          res.status(400).json({message: "no block content"});
+        }
+      });
+      */
+    }
+
+
+    /**
+     * POST address, url: "/requestValidation"
+     */
+    requestValidation() {
+      this.app.post("/requestValidation", async (req, res) => {
+        if (req.body.address) {
+          // add address and requestTimeStamp to mempool
+          // so you can calculate later the window time
+          const address = req.body.address;
+          const requsetObject = this.mempool.addRequestValidation(address);
+
+          //return with requestObject
+          res.send(JSON.stringify(requsetObject, null, 2));
+        } else {
+          res.status(400).json({message: "no address"});
+        }
+      });
+    }
+
+    /**
+     * POST address and signature, url: "/message-signature/validate"
+     */
+    validate() {
+      this.app.post("/message-signature/validate", async (req, res) => {
+        if (req.body.address && req.body.signature) {
+          const validateRequest = await this.mempool.validateRequestByWallet(req.body.address, req.body.signature);
+          if (validateRequest) {
+            res.send(JSON.stringify(validateRequest, null, 2));
+          } else {
+            res.status(400).json({message: "invalid"});
+          }
+        } else {
+          res.status(400).json({message: "no such address"});
+        }
+      });
     }
 
     /**
@@ -68,6 +188,7 @@ class BlockController {
      */
 
 }
+
 
 /**
  * Exporting the BlockController class

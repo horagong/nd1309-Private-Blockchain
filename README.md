@@ -1,3 +1,46 @@
+# Project #4. Build a Private Blockchain Notary Service
+
+In this project I created a notary service using my `private blockchain` and `Expressjs`.
+
+## Setup project for Review.
+
+To setup the project for review do the following:
+1. Download the project.
+2. Run command __npm install__ to install the project dependencies.
+3. Run command __node app.js__.
+
+## Testing the project
+1. POST http://localhost:8000/requestValidation
+The request should contain:
+```js
+{ "address":"19xaiMqayaNrn3x7AjV5cU4Mk5f5prRVpL" }
+```
+2. POST http://localhost:8000/message-signature/validate
+The request should contain:
+```js
+{
+"address":"19xaiMqayaNrn3x7AjV5cU4Mk5f5prRVpL",
+ "signature":"H8K4+1MvyJo9tcr2YN2KejwvX1oqneyCH+fsUL1z1WBdWmswB9bijeFfOfMqK68kQ5RO6ZxhomoXQG3fkLaBl+Q="
+}
+```
+3. POST http://localhost:8000/block
+The request should contain:
+```js
+{
+    "address": "19xaiMqayaNrn3x7AjV5cU4Mk5f5prRVpL",
+    "star": {
+                "dec": "68° 52' 56.9",
+                "ra": "16h 29m 1.0s",
+                "story": "Found star using https://www.google.com/sky/"
+            }
+}
+```
+4. GET http://localhost:8000/stars/address:[ADDRESS]
+
+5. GET http://localhost:8000/block/[HEIGHT]
+
+---
+
 # Project #3. Connect Private Blockchain to Front-End Client via APIs
 
 In this project I created the classes to manage my private blockchain using `LevelDB` and serve API for clients using `Expressjs`.
@@ -7,9 +50,7 @@ In this project I created the classes to manage my private blockchain using `Lev
 To setup the project for review do the following:
 1. Download the project.
 2. Run command __npm install__ to install the project dependencies.
-3. Run command __node simpleChain.js__ in the root directory as in Project #2.
-This will make test blocks.
-4. Run command __node app.js__.
+3. Run command __node app.js__.
 
 ## Testing the project
 1. try GET requesting to http://localhost:8000/block/:blockHeight
@@ -20,6 +61,7 @@ This will make test blocks.
 }
 ```
 
+---
 
 # Project #2. Private Blockchain
 
