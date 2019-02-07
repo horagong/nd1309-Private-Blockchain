@@ -51,6 +51,7 @@ class MemPool {
   verifyAddressRequest(address) {
     if (this.mempool[address]) {
       if (this.mempoolValid[address]) {
+        delete this.mempoolValid[address];
         return true;
       }
     }
