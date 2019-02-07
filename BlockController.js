@@ -33,20 +33,15 @@ class BlockController {
         this.validate();
     }
 
-    /**
-     * Implement a GET Endpoint to retrieve a block by index, url: "/block/:index"
-     */
     getBlockByHeight() {
       this.app.get("/block/:height", async (req, res) => {
         let height = req.params.height;
         let block = await this.bc.getBlock(height)
         if (block) {
-        /* for project 4
           try {
             block.body.star.storyDecoded = hex2ascii(block.body.star.story);
           } catch {
           }
-          */
           res.send(JSON.stringify(block, null, 2));
         } else {
           res.status(400).json({message: "no such block"});
@@ -54,9 +49,6 @@ class BlockController {
       });
     }
 
-    /**
-     * Implement a GET Endpoint to retrieve a block by hash, url: "/stars/hash:hash"
-     */
     getBlockByHash() {
       this.app.get("/stars/hash([\:]):hash", async (req, res) => {
         let hash = req.params.hash;
@@ -93,20 +85,7 @@ class BlockController {
     }
     
 
-    /**
-     * Implement a POST Endpoint to add a new Block, url: "/block"
-     */
     postNewBlock() {
-      this.app.post("/block", async (req, res) => {
-        if (req.body.body) {
-          let result = await this.bc.addBlock(req.body);
-          res.send(result);
-        } else {
-          res.status(400).json({message: "no block content"});
-        }
-
-      });
-      /* for project 4
       this.app.post("/block", async (req, res) => {
         if (req.body.address) {
           const valid = await this.mempool.verifyAddressRequest(req.body.address);
@@ -132,13 +111,9 @@ class BlockController {
           res.status(400).json({message: "no block content"});
         }
       });
-      */
     }
 
 
-    /**
-     * POST address, url: "/requestValidation"
-     */
     requestValidation() {
       this.app.post("/requestValidation", async (req, res) => {
         if (req.body.address) {
@@ -155,9 +130,6 @@ class BlockController {
       });
     }
 
-    /**
-     * POST address and signature, url: "/message-signature/validate"
-     */
     validate() {
       this.app.post("/message-signature/validate", async (req, res) => {
         if (req.body.address && req.body.signature) {

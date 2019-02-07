@@ -1,5 +1,3 @@
-<details><summary></summary>
-
 # Project #4. Build a Private Blockchain Notary Service
 
 In this project I created a notary service using my `private blockchain` and `Expressjs`.
@@ -41,9 +39,9 @@ The request should contain:
 
 5. GET http://localhost:8000/block/[HEIGHT]
 
-</details>
 ---
 
+<details><summary></summary>
 # Project #3. Connect Private Blockchain to Front-End Client via APIs
 
 In this project I created the classes to manage my private blockchain using `LevelDB` and serve API for clients using `Expressjs`.
@@ -63,7 +61,10 @@ To setup the project for review do the following:
       "body": "Testing block with test string data"
 }
 ```
+</details>
+
 ---
+
 <details><summary></summary>
 
 # Project #2. Private Blockchain
