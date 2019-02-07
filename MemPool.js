@@ -52,6 +52,8 @@ class MemPool {
     if (this.mempool[address]) {
       if (this.mempoolValid[address]) {
         delete this.mempoolValid[address];
+        delete this.mempool[address];
+        delete this.timeoutRequests[address];
         return true;
       }
     }
